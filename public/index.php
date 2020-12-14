@@ -29,15 +29,9 @@ $channel_secret = "893b3644881ea464470ed920fae31e9d";
 // inisiasi objek bot
 $httpClient = new CurlHTTPClient($channel_access_token);
 $bot = new LINEBot($httpClient, ['channelSecret' => $channel_secret]);
- 
- 
- 
- 
+  
 $app = AppFactory::create();
 $app->setBasePath("/public");
- 
- 
- 
  
 $app->get('/', function (Request $request, Response $response, $args) {
     $response->getBody()->write("Hello World!");
@@ -51,10 +45,8 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
     $body = $request->getBody();
     $signature = $request->getHeaderLine('HTTP_X_LINE_SIGNATURE');
  
- 
     // log body and signature
     file_put_contents('php://stderr', 'Body: ' . $body);
- 
  
     if ($pass_signature === false) {
         // is LINE_SIGNATURE exists in request header?
@@ -62,13 +54,11 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
             return $response->withStatus(400, 'Signature not set');
         }
  
- 
         // is this request comes from LINE?
         if (!SignatureValidator::validateSignature($body, $channel_secret, $signature)) {
             return $response->withStatus(400, 'Invalid signature');
         }
     }
- 
  
     $data = json_decode($body, true);
     if(is_array($data['events'])){
@@ -81,15 +71,9 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                     // send same message as reply to user
                     $result = $bot->replyText($event['replyToken'], $event['message']['text']);
  
- 
- 
- 
                     // or we can use replyMessage() instead to send reply message
                     // $textMessageBuilder = new TextMessageBuilder($event['message']['text']);
                     // $result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
- 
- 
- 
  
                     $response->getBody()->write(json_encode($result->getJSONDecodedBody()));
                     return $response
