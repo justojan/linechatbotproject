@@ -51,8 +51,7 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
         }
     }
     
-// kode aplikasi nanti disini
-$data = json_decode($body, true);
+    $data = json_decode($body, true);
     if(is_array($data['events'])){
         foreach ($data['events'] as $event)
         {
@@ -77,6 +76,5 @@ $data = json_decode($body, true);
         return $response->withStatus(200, 'for Webhook!'); //buat ngasih response 200 ke pas verify webhook
     }
     return $response->withStatus(400, 'No event sent!');
- 
 });
 $app->run();
